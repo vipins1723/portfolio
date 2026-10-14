@@ -155,6 +155,13 @@ const PinIcon = ({ size = 22 }: { size?: number }) => (
   </svg>
 )
 
+const DocIcon = () => (
+  <svg {...iconProps} width={18} height={18}>
+    <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z" />
+    <path d="M14 3v5h5M9 13h6M9 17h6" />
+  </svg>
+)
+
 const LinkedInIcon = () => (
   <svg width={22} height={22} viewBox="0 0 24 24" aria-hidden="true">
     <rect width="24" height="24" rx="4" fill="#0a66c2" />
@@ -259,6 +266,9 @@ function App() {
               </a>
               <a className="btn" href="#work">
                 See my work
+              </a>
+              <a className="btn" href={profile.resume} target="_blank" rel="noreferrer">
+                <DocIcon /> View resume
               </a>
             </div>
           </div>

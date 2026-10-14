@@ -6,6 +6,8 @@ export const profile = {
   email: 'vipins7150@gmail.com',
   phone: '+91-9001380664',
   linkedin: 'https://www.linkedin.com/in/vipin-singh-05v12a',
+  // Served from public/; replace that file to update the resume.
+  resume: '/Vipin_Singh_Resume.pdf',
   headline: 'I break software on purpose, so your users never do.',
   summary:
     'QA engineer with 3+ years building automation frameworks across web, mobile and APIs at Paytm, Fleetx and Incedo. ' +
