@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import {
   education,
   experience,
@@ -112,12 +112,37 @@ function App() {
   const [copied, setCopied] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
+  // Section picked in the drawer; scrolled to once the drawer has closed and unlocked the page.
+  const pendingSection = useRef<string | null>(null)
+
+  // While the drawer is open: lock page scroll and close on Escape.
   useEffect(() => {
-    if (!menuOpen) return
+    if (!menuOpen) {
+      const target = pendingSection.current
+      pendingSection.current = null
+      if (!target) return
+      history.replaceState(null, '', target)
+      // Wait a frame so the unlocked page has re-laid out before scrolling.
+      const frame = requestAnimationFrame(() =>
+        document.querySelector(target)?.scrollIntoView({ behavior: 'smooth' }),
+      )
+      return () => cancelAnimationFrame(frame)
+    }
+    const root = document.documentElement
+    root.style.overflow = 'hidden'
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMenuOpen(false)
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    return () => {
+      root.style.overflow = ''
+      window.removeEventListener('keydown', onKey)
+    }
   }, [menuOpen])
+
+  const goToSection = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault()
+    pendingSection.current = href
+    setMenuOpen(false)
+  }
 
   const copyEmail = async () => {
     try {
@@ -132,14 +157,14 @@ function App() {
 
   return (
     <>
-      <header className={menuOpen ? 'nav open' : 'nav'}>
+      <header className="nav">
         <div className="wrap nav-inner">
-          <a href="#top" className="brand" onClick={() => setMenuOpen(false)}>
+          <a href="#top" className="brand">
             VS<span className="pass">.</span>
           </a>
-          <nav id="site-menu" aria-label="Sections">
+          <nav className="desktop-nav" aria-label="Sections">
             {navLinks.map(([href, label]) => (
-              <a key={href} href={href} onClick={() => setMenuOpen(false)}>
+              <a key={href} href={href}>
                 {label}
               </a>
             ))}
@@ -151,8 +176,8 @@ function App() {
           <button
             type="button"
             className="menu-toggle"
-            onClick={() => setMenuOpen((open) => !open)}
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            onClick={() => setMenuOpen(true)}
+            aria-label="Open menu"
             aria-expanded={menuOpen}
             aria-controls="site-menu"
           >
@@ -162,6 +187,23 @@ function App() {
           </button>
         </div>
       </header>
+
+      <div className={menuOpen ? 'drawer open' : 'drawer'} inert={!menuOpen}>
+        <div className="drawer-backdrop" onClick={() => setMenuOpen(false)} />
+        <nav id="site-menu" className="drawer-panel" aria-label="Sections">
+          <div className="drawer-head">
+            <span className="eyebrow">Menu</span>
+            <button type="button" className="drawer-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">
+              ✕
+            </button>
+          </div>
+          {navLinks.map(([href, label]) => (
+            <a key={href} href={href} onClick={(e) => goToSection(e, href)}>
+              {label}
+            </a>
+          ))}
+        </nav>
+      </div>
 
       <main id="top">
         <section className="hero wrap">
