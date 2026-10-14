@@ -110,6 +110,14 @@ const mailLinks = {
 function App() {
   const toggleTheme = useTheme()
   const [copied, setCopied] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMenuOpen(false)
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [menuOpen])
 
   const copyEmail = async () => {
     try {
@@ -124,14 +132,14 @@ function App() {
 
   return (
     <>
-      <header className="nav">
+      <header className={menuOpen ? 'nav open' : 'nav'}>
         <div className="wrap nav-inner">
-          <a href="#top" className="brand">
+          <a href="#top" className="brand" onClick={() => setMenuOpen(false)}>
             VS<span className="pass">.</span>
           </a>
-          <nav aria-label="Sections">
+          <nav id="site-menu" aria-label="Sections">
             {navLinks.map(([href, label]) => (
-              <a key={href} href={href}>
+              <a key={href} href={href} onClick={() => setMenuOpen(false)}>
                 {label}
               </a>
             ))}
@@ -139,6 +147,18 @@ function App() {
           <button type="button" className="theme-toggle" onClick={toggleTheme} aria-label="Toggle colour theme">
             <span className="icon-sun">☀</span>
             <span className="icon-moon">☾</span>
+          </button>
+          <button
+            type="button"
+            className="menu-toggle"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+            aria-controls="site-menu"
+          >
+            <span />
+            <span />
+            <span />
           </button>
         </div>
       </header>

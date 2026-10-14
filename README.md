@@ -1,5 +1,7 @@
 # Vipin Singh · Portfolio
 
+**Live:** https://meet-vipinsingh.vercel.app
+
 Personal portfolio of Vipin Singh, Senior SDE – QA. Covers test automation across web, mobile and APIs, and agentic AI-driven QA workflows.
 
 Built with React, TypeScript and Vite. No backend.
