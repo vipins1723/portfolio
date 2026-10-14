@@ -292,8 +292,8 @@ function App() {
             {experience.map((job) => (
               <li key={job.company} className="job">
                 <article className="job-card">
-                  <div className="job-logo" aria-hidden="true">
-                    {job.company[0]}
+                  <div className="job-logo">
+                    <img src={job.logo} alt={`${job.company} logo`} width="44" height="44" loading="lazy" />
                   </div>
                   <h3 className="job-company">{job.company}</h3>
                   <p className="job-role">{job.role}</p>

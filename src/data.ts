@@ -1,9 +1,13 @@
+import fleetxLogo from './assets/logos/fleetx.png'
+import incedoLogo from './assets/logos/incedo.png'
+import paytmLogo from './assets/logos/paytm.svg'
+
 export const profile = {
   name: 'Vipin Singh',
   role: 'Senior SDE – QA',
   company: 'Fleetx',
   location: 'India',
-  email: 'vipins7150@gmail.com',
+  email: 'vipins1723@gmail.com',
   phone: '+91-9001380664',
   linkedin: 'https://www.linkedin.com/in/vipin-singh-05v12a',
   // Served from public/; replace that file to update the resume.
@@ -24,6 +28,7 @@ export const stats = [
 
 export type Job = {
   company: string
+  logo: string
   role: string
   period: string
   location: string
@@ -35,6 +40,7 @@ export type Job = {
 export const experience: Job[] = [
   {
     company: 'Fleetx Technologies',
+    logo: fleetxLogo,
     role: 'Senior Software Development Engineer – QA',
     period: 'Aug 2026 – Present',
     location: 'India',
@@ -48,6 +54,7 @@ export const experience: Job[] = [
   },
   {
     company: 'Paytm (One97 Communications)',
+    logo: paytmLogo,
     role: 'QA Engineer',
     period: 'Dec 2024 – Aug 2026',
     location: 'India',
@@ -63,6 +70,7 @@ export const experience: Job[] = [
   },
   {
     company: 'Incedo Inc.',
+    logo: incedoLogo,
     role: 'Software Engineer',
     period: 'Jul 2023 – Aug 2024',
     location: 'India',
