@@ -24,6 +24,7 @@ export type Job = {
   company: string
   role: string
   period: string
+  location: string
   blurb: string
   points: string[]
   tags: string[]
@@ -34,6 +35,7 @@ export const experience: Job[] = [
     company: 'Fleetx Technologies',
     role: 'Senior Software Development Engineer – QA',
     period: 'Aug 2026 – Present',
+    location: 'India',
     blurb: 'Quality owner for a fleet-management SaaS product shipping every 15 days.',
     points: [
       'Own end-to-end QA for every 15-day sprint release, from feature readiness to release validation, across functional, API and automation testing.',
@@ -46,6 +48,7 @@ export const experience: Job[] = [
     company: 'Paytm (One97 Communications)',
     role: 'QA Engineer',
     period: 'Dec 2024 – Aug 2026',
+    location: 'India',
     blurb: 'Quality for Paytm’s Bus business across desktop web, mobile web, Android and iOS.',
     points: [
       'Designed scalable UI, API and mobile automation frameworks with Java, Selenium, TestNG, Rest Assured and Appium, cutting manual effort by 60% and regression time by 45%.',
@@ -60,6 +63,7 @@ export const experience: Job[] = [
     company: 'Incedo Inc.',
     role: 'Software Engineer',
     period: 'Jul 2023 – Aug 2024',
+    location: 'India',
     blurb: 'Automation engineer working daily with a US-based product team.',
     points: [
       'Developed and executed 300+ UI and API automation tests in Java and Selenium, reducing manual testing by roughly 80–90%.',

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type MouseEvent } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   education,
   experience,
@@ -92,12 +92,78 @@ function TestRunner() {
 }
 
 const navLinks = [
-  ['#experience', 'Experience'],
-  ['#work', 'Work'],
-  ['#skills', 'Skills'],
-  ['#about', 'About'],
-  ['#contact', 'Contact'],
+  ['home', 'Home'],
+  ['experience', 'Experience'],
+  ['work', 'Work'],
+  ['skills', 'Skills'],
+  ['about', 'About'],
+  ['contact', 'Contact'],
 ]
+
+const sectionIds = navLinks.map(([id]) => id)
+
+// Tracks which section sits in the upper-middle of the screen, for the nav highlight.
+function useActiveSection(ids: string[]) {
+  const [active, setActive] = useState(ids[0])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) if (entry.isIntersecting) setActive(entry.target.id)
+      },
+      { rootMargin: '-35% 0px -60% 0px' },
+    )
+    for (const id of ids) {
+      const el = document.getElementById(id)
+      if (el) observer.observe(el)
+    }
+    return () => observer.disconnect()
+  }, [ids])
+
+  return active
+}
+
+const iconProps = {
+  width: 22,
+  height: 22,
+  viewBox: '0 0 24 24',
+  fill: 'none',
+  stroke: 'currentColor',
+  strokeWidth: 1.8,
+  strokeLinecap: 'round' as const,
+  strokeLinejoin: 'round' as const,
+  'aria-hidden': true,
+}
+
+const MailIcon = () => (
+  <svg {...iconProps}>
+    <rect x="3" y="5" width="18" height="14" rx="2" />
+    <path d="m3 7 9 6 9-6" />
+  </svg>
+)
+
+const PhoneIcon = () => (
+  <svg {...iconProps}>
+    <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z" />
+  </svg>
+)
+
+const PinIcon = ({ size = 22 }: { size?: number }) => (
+  <svg {...iconProps} width={size} height={size}>
+    <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z" />
+    <circle cx="12" cy="10" r="3" />
+  </svg>
+)
+
+const LinkedInIcon = () => (
+  <svg width={22} height={22} viewBox="0 0 24 24" aria-hidden="true">
+    <rect width="24" height="24" rx="4" fill="#0a66c2" />
+    <path
+      fill="#fff"
+      d="M7.1 9.5h-2.4V18h2.4V9.5ZM5.9 5.6a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8ZM18.8 13.3c0-2.5-1.3-3.9-3.2-3.9-1.3 0-2 .7-2.4 1.3V9.5H11V18h2.4v-4.4c0-1.1.4-2 1.5-2s1.4 1 1.4 2V18h2.4v-4.7Z"
+    />
+  </svg>
+)
 
 const mailSubject = encodeURIComponent('Hello Vipin, reaching out from your portfolio')
 
@@ -110,39 +176,36 @@ const mailLinks = {
 function App() {
   const toggleTheme = useTheme()
   const [copied, setCopied] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
+  const active = useActiveSection(sectionIds)
+  const pillRef = useRef<HTMLElement>(null)
 
-  // Section picked in the drawer; scrolled to once the drawer has closed and unlocked the page.
-  const pendingSection = useRef<string | null>(null)
-
-  // While the drawer is open: lock page scroll and close on Escape.
+  // On narrow screens the pill scrolls sideways: fade whichever edge has hidden links.
+  const [pillEdges, setPillEdges] = useState('')
   useEffect(() => {
-    if (!menuOpen) {
-      const target = pendingSection.current
-      pendingSection.current = null
-      if (!target) return
-      history.replaceState(null, '', target)
-      // Wait a frame so the unlocked page has re-laid out before scrolling.
-      const frame = requestAnimationFrame(() =>
-        document.querySelector(target)?.scrollIntoView({ behavior: 'smooth' }),
-      )
-      return () => cancelAnimationFrame(frame)
+    const pill = pillRef.current
+    if (!pill) return
+    const update = () => {
+      const left = pill.scrollLeft > 4
+      const right = pill.scrollLeft + pill.clientWidth < pill.scrollWidth - 4
+      setPillEdges([left && 'fade-left', right && 'fade-right'].filter(Boolean).join(' '))
     }
-    const root = document.documentElement
-    root.style.overflow = 'hidden'
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMenuOpen(false)
-    window.addEventListener('keydown', onKey)
+    const frame = requestAnimationFrame(update)
+    pill.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
     return () => {
-      root.style.overflow = ''
-      window.removeEventListener('keydown', onKey)
+      cancelAnimationFrame(frame)
+      pill.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
     }
-  }, [menuOpen])
+  }, [])
 
-  const goToSection = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault()
-    pendingSection.current = href
-    setMenuOpen(false)
-  }
+  // Keep the highlighted link in view inside the pill.
+  useEffect(() => {
+    const pill = pillRef.current
+    const link = pill?.querySelector<HTMLElement>('a.active')
+    if (!pill || !link || pill.scrollWidth <= pill.clientWidth) return
+    pill.scrollTo({ left: link.offsetLeft - (pill.clientWidth - link.offsetWidth) / 2, behavior: 'smooth' })
+  }, [active])
 
   const copyEmail = async () => {
     try {
@@ -159,12 +222,17 @@ function App() {
     <>
       <header className="nav">
         <div className="wrap nav-inner">
-          <a href="#top" className="brand">
+          <a href="#home" className="brand">
             VS<span className="pass">.</span>
           </a>
-          <nav className="desktop-nav" aria-label="Sections">
-            {navLinks.map(([href, label]) => (
-              <a key={href} href={href}>
+          <nav ref={pillRef} className={`pill-nav ${pillEdges}`} aria-label="Sections">
+            {navLinks.map(([id, label]) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                className={active === id ? 'active' : undefined}
+                aria-current={active === id ? 'true' : undefined}
+              >
                 {label}
               </a>
             ))}
@@ -173,40 +241,11 @@ function App() {
             <span className="icon-sun">☀</span>
             <span className="icon-moon">☾</span>
           </button>
-          <button
-            type="button"
-            className="menu-toggle"
-            onClick={() => setMenuOpen(true)}
-            aria-label="Open menu"
-            aria-expanded={menuOpen}
-            aria-controls="site-menu"
-          >
-            <span />
-            <span />
-            <span />
-          </button>
         </div>
       </header>
 
-      <div className={menuOpen ? 'drawer open' : 'drawer'} inert={!menuOpen}>
-        <div className="drawer-backdrop" onClick={() => setMenuOpen(false)} />
-        <nav id="site-menu" className="drawer-panel" aria-label="Sections">
-          <div className="drawer-head">
-            <span className="eyebrow">Menu</span>
-            <button type="button" className="drawer-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">
-              ✕
-            </button>
-          </div>
-          {navLinks.map(([href, label]) => (
-            <a key={href} href={href} onClick={(e) => goToSection(e, href)}>
-              {label}
-            </a>
-          ))}
-        </nav>
-      </div>
-
-      <main id="top">
-        <section className="hero wrap">
+      <main>
+        <section id="home" className="hero wrap">
           <div className="hero-text">
             <p className="eyebrow">
               <span className="status" /> {profile.role} at {profile.company} · {profile.location}
@@ -242,26 +281,30 @@ function App() {
           <ol className="timeline">
             {experience.map((job) => (
               <li key={job.company} className="job">
-                <div className="job-head">
-                  <div>
-                    <h3>{job.role}</h3>
-                    <p className="company">{job.company}</p>
+                <article className="job-card">
+                  <div className="job-logo" aria-hidden="true">
+                    {job.company[0]}
                   </div>
-                  <span className="period">{job.period}</span>
-                </div>
-                <p className="blurb">{job.blurb}</p>
-                <ul className="points">
-                  {job.points.map((p) => (
-                    <li key={p}>{p}</li>
-                  ))}
-                </ul>
-                <div className="tags">
-                  {job.tags.map((t) => (
-                    <span key={t} className="tag">
-                      {t}
-                    </span>
-                  ))}
-                </div>
+                  <h3 className="job-company">{job.company}</h3>
+                  <p className="job-role">{job.role}</p>
+                  <span className="job-period">{job.period}</span>
+                  <p className="job-location">
+                    <PinIcon size={16} /> {job.location}
+                  </p>
+                  <p className="job-blurb">{job.blurb}</p>
+                  <ul className="job-points">
+                    {job.points.map((p) => (
+                      <li key={p}>{p}</li>
+                    ))}
+                  </ul>
+                  <div className="tags job-tags">
+                    {job.tags.map((t) => (
+                      <span key={t} className="tag">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </article>
               </li>
             ))}
           </ol>
@@ -386,20 +429,49 @@ function App() {
         </section>
 
         <section id="contact" className="wrap section contact">
+          <p className="contact-kicker">Get in touch</p>
           <h2>Let’s ship something reliable.</h2>
           <p className="lede">
-            Open to conversations about QA leadership, SDET roles and AI-assisted testing.
+            Open to conversations about QA leadership, SDET roles and AI-assisted testing. Whether you’re hiring or
+            just want to connect, feel free to reach out.
           </p>
-          <div className="actions">
-            <a className="btn primary" href={mailLinks.app}>
-              {profile.email}
+          <div className="contact-cards">
+            <a className="contact-card" href={mailLinks.app}>
+              <span className="contact-icon">
+                <MailIcon />
+              </span>
+              <span>
+                <strong>Email</strong>
+                <span>{profile.email}</span>
+              </span>
             </a>
-            <a className="btn" href={`tel:${profile.phone.replace(/[^+\d]/g, '')}`}>
-              {profile.phone}
+            <a className="contact-card" href={`tel:${profile.phone.replace(/[^+\d]/g, '')}`}>
+              <span className="contact-icon">
+                <PhoneIcon />
+              </span>
+              <span>
+                <strong>Phone</strong>
+                <span>{profile.phone}</span>
+              </span>
             </a>
+            <div className="contact-card">
+              <span className="contact-icon">
+                <PinIcon />
+              </span>
+              <span>
+                <strong>Location</strong>
+                <span>{profile.location}</span>
+              </span>
+            </div>
             {profile.linkedin && (
-              <a className="btn" href={profile.linkedin} target="_blank" rel="noreferrer">
-                LinkedIn
+              <a className="contact-card" href={profile.linkedin} target="_blank" rel="noreferrer">
+                <span className="contact-icon">
+                  <LinkedInIcon />
+                </span>
+                <span>
+                  <strong>LinkedIn</strong>
+                  <span>{profile.linkedin.replace(/^https?:\/\/(www\.)?/, '')}</span>
+                </span>
               </a>
             )}
           </div>

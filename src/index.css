@@ -7,6 +7,7 @@
   --border: #dde3de;
   --accent: #0f8a5f;
   --accent-soft: #e1f3eb;
+  --accent-2: #0e7490;
   --on-accent: #ffffff;
   --code-bg: #101814;
   --code-text: #d7e3dc;
@@ -32,6 +33,7 @@
     --border: #25322b;
     --accent: #34d399;
     --accent-soft: #143326;
+    --accent-2: #22d3ee;
     --on-accent: #06210f;
     --code-bg: #080d0a;
     --shadow: none;
@@ -48,6 +50,7 @@
   --border: #25322b;
   --accent: #34d399;
   --accent-soft: #143326;
+    --accent-2: #22d3ee;
   --on-accent: #06210f;
   --code-bg: #080d0a;
   --shadow: none;
@@ -62,7 +65,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 72px;
+  scroll-padding-top: 84px;
 }
 
 @media (prefers-reduced-motion: reduce) {
