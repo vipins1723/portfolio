@@ -415,10 +415,6 @@ function App() {
                   {education.period} · {education.grade}
                 </p>
               </div>
-              <p className="note">
-                I trained as a chemical engineer, which taught me to think in processes, controls and failure
-                modes. It turned out to be good preparation for testing software.
-              </p>
               {education.internships.map((i) => (
                 <div key={i.org} className="about-item">
                   <h4>{i.org}</h4>

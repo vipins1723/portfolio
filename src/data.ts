@@ -47,10 +47,17 @@ export const experience: Job[] = [
     blurb: 'Quality owner for a fleet-management SaaS product shipping every 15 days.',
     points: [
       'Own end-to-end QA for every 15-day sprint release, from feature readiness to release validation, across functional, API and automation testing.',
-      'Building API and UI automation frameworks for new agentic modules from scratch, so failures surface early as AI capabilities join the existing product.',
       'Mentor 2 junior engineers: plan their sprint deliverables and review their automation code before merge.',
+      'Web UI automation framework: architected and developed a scalable end-to-end UI automation framework from scratch using Playwright, JavaScript (Node.js) and the Page Object Model, with reusable helper libraries, custom fixtures and session-based authentication across 60+ automated test suites.',
+      'Automated critical workflows across the ERP, TMS, Billing, Consignment, Contract and Tyre Management modules, with data-driven testing using Chance.js and dotenv and execution across QA, UAT and Production environments.',
+      'Implemented parallel execution, retry mechanisms and failure diagnostics with trace, video and screenshot capture, plus Allure and HTML reporting for test result analysis.',
+      'Integrated the framework with GitLab CI/CD and Slack notifications, automating test execution and failure reporting and reducing manual regression effort by 70%.',
+      'API automation framework: enhanced an enterprise API automation framework using Playwright, JavaScript (Node.js) and modular POM-based components, contributing to 2,400+ automated test cases across five modules: FMS, ERP, TMS, DMS and RMS.',
+      'Developed automated tests for newly introduced REST APIs, with comprehensive assertions and response validations covering functional, regression, negative and boundary scenarios.',
+      'Implemented data-driven test execution across Staging, Pre-Production and Production environments using reusable API testing components and automated test-data handling.',
+      'Integrated HTML test reporting to consolidate execution results, identify failures and support regression analysis.',
     ],
-    tags: ['Release ownership', 'Agentic AI testing', 'Framework design', 'Mentoring'],
+    tags: ['Playwright', 'JavaScript', 'Node.js', 'POM', 'REST APIs', 'Chance.js', 'GitLab CI/CD', 'Allure', 'Release ownership', 'Mentoring'],
   },
   {
     company: 'Paytm (One97 Communications)',
@@ -182,7 +189,7 @@ export const leadership = [
 
 export const education = {
   school: 'Dr. B. R. Ambedkar National Institute of Technology, Jalandhar',
-  degree: 'B.Tech, Chemical Engineering',
+  degree: 'B.Tech',
   period: '2019 – 2023',
   grade: 'CGPA 7.41 / 10',
   internships: [
