@@ -1,4 +1,4 @@
-import fleetxLogo from './assets/logos/fleetx.svg'
+import fleetxLogo from './assets/logos/fleetx.png'
 import incedoLogo from './assets/logos/incedo.png'
 import paytmLogo from './assets/logos/paytm.svg'
 import nitjLogo from './assets/logos/nitj.png'

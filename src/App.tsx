@@ -409,7 +409,7 @@ function App() {
             <div className="about-col">
               <h3 className="col-title">Education</h3>
               <div className="about-item edu-item">
-                <img className="edu-logo" src={education.logo} alt="NIT Jalandhar logo" width="56" height="56" loading="lazy" />
+                <img className="edu-logo" src={education.logo} alt="NIT Jalandhar logo" width="64" height="64" loading="lazy" />
                 <p className="edu-school">{education.school}</p>
                 <h4>{education.degree}</h4>
                 <p>
