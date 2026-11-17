@@ -127,40 +127,71 @@ export const projects = [
   },
 ]
 
-export const skills = [
-  { group: 'Languages', items: ['Java', 'JavaScript', 'Python', 'SQL'] },
+// Shown as the highlighted "core stack" strip and emphasised inside each group.
+export const coreSkills = [
+  'Java',
+  'JavaScript',
+  'Playwright',
+  'Selenium WebDriver',
+  'Appium',
+  'Rest Assured',
+  'TestNG',
+  'API Automation',
+  'CI/CD Pipelines',
+  'Test Automation Framework Design',
+]
+
+export type SkillGroup = {
+  group: string
+  icon: 'code' | 'device' | 'api' | 'pipeline' | 'check' | 'tool' | 'cpu'
+  items: string[]
+}
+
+export const skills: SkillGroup[] = [
+  { group: 'Programming', icon: 'code', items: ['Java', 'JavaScript', 'Python', 'SQL'] },
   {
-    group: 'UI & mobile automation',
-    items: ['Selenium WebDriver', 'Playwright', 'Appium', 'TestNG', 'Page Object Model'],
+    group: 'UI & Mobile Automation',
+    icon: 'device',
+    items: ['Selenium WebDriver', 'Appium', 'TestNG', 'Playwright', 'Page Object Model (POM)'],
   },
   {
-    group: 'API & data',
-    items: ['Rest Assured', 'REST APIs', 'Postman', 'Swagger', 'Database testing'],
+    group: 'API & Database Testing',
+    icon: 'api',
+    items: ['Rest Assured', 'REST APIs', 'Swagger', 'Postman', 'API Automation', 'Database Testing', 'SQL'],
   },
   {
-    group: 'AI-assisted QA',
-    items: ['LLM workflows', 'MCP', 'Agentic testing', 'LambdaTest'],
+    group: 'CI/CD & DevOps',
+    icon: 'pipeline',
+    items: ['Jenkins', 'Maven', 'Git', 'GitHub', 'GitLab', 'Bitbucket', 'Docker', 'Kubernetes', 'CI/CD Pipelines'],
   },
   {
-    group: 'CI/CD & tooling',
-    items: ['Jenkins', 'Maven', 'Git', 'GitHub', 'GitLab', 'Bitbucket', 'Jira', 'Charles Proxy', 'JMeter'],
-  },
-  {
-    group: 'Testing practice',
+    group: 'Testing',
+    icon: 'check',
     items: [
-      'Test strategy',
-      'Regression',
-      'Functional',
-      'Exploratory',
-      'Integration',
-      'End-to-end',
-      'Mobile',
-      'Root-cause analysis',
+      'Functional Testing',
+      'Regression Testing',
+      'Exploratory Testing',
+      'Integration Testing',
+      'End-to-End Testing',
+      'Mobile Testing',
+      'API Testing',
+      'BDD',
+      'Test Strategy',
+      'Root Cause Analysis',
     ],
   },
+  { group: 'Tools', icon: 'tool', items: ['Jira', 'Charles Proxy', 'JMeter'] },
   {
     group: 'Engineering',
-    items: ['OOP', 'Data structures & algorithms', 'DBMS', 'System design basics', 'Framework design', 'Agile / Scrum'],
+    icon: 'cpu',
+    items: [
+      'Object-Oriented Programming',
+      'Data Structures and Algorithms',
+      'DBMS',
+      'System Design Fundamentals',
+      'Test Automation Framework Design',
+      'Agile/Scrum',
+    ],
   },
 ]
 

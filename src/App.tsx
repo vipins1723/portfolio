@@ -9,6 +9,8 @@ import {
   projects,
   runnerLines,
   skills,
+  coreSkills,
+  type SkillGroup,
   stats,
 } from './data'
 import './App.css'
@@ -159,6 +161,52 @@ const DocIcon = () => (
   <svg {...iconProps} width={18} height={18}>
     <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z" />
     <path d="M14 3v5h5M9 13h6M9 17h6" />
+  </svg>
+)
+
+const skillIconPaths: Record<SkillGroup['icon'], React.ReactNode> = {
+  code: <path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16" />,
+  device: (
+    <>
+      <rect x="6" y="2" width="12" height="20" rx="2.5" />
+      <path d="M11 18h2" />
+    </>
+  ),
+  api: (
+    <>
+      <ellipse cx="12" cy="5" rx="8" ry="3" />
+      <path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6" />
+    </>
+  ),
+  pipeline: (
+    <>
+      <circle cx="6" cy="6" r="2.5" />
+      <circle cx="6" cy="18" r="2.5" />
+      <circle cx="18" cy="9" r="2.5" />
+      <path d="M6 8.5v7M18 11.5c0 3-3 4-9.5 5" />
+    </>
+  ),
+  check: (
+    <>
+      <path d="M21 12a9 9 0 1 1-5.3-8.2" />
+      <path d="m8 11 3.5 3.5L21 5" />
+    </>
+  ),
+  tool: <path d="M14.7 6.3a4 4 0 0 0 5 5L21 13l-8 8-3-3 8-8M14.7 6.3 13 4.6a4 4 0 0 0-5.6 5.6L3 14.6 9.4 21l4.4-4.4" />,
+  cpu: (
+    <>
+      <rect x="5" y="5" width="14" height="14" rx="2" />
+      <rect x="9" y="9" width="6" height="6" rx="1" />
+      <path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3" />
+    </>
+  ),
+}
+
+const SkillIcon = ({ name }: { name: SkillGroup['icon'] }) => <svg {...iconProps}>{skillIconPaths[name]}</svg>
+
+const StarIcon = () => (
+  <svg width={12} height={12} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1Z" />
   </svg>
 )
 
@@ -375,16 +423,40 @@ function App() {
           <h2 className="section-title">
             <span className="num">03</span> Toolkit
           </h2>
+          <div className="core-skills">
+            <p className="core-label">
+              <StarIcon /> Core stack
+            </p>
+            <div className="core-tags">
+              {coreSkills.map((item) => (
+                <span key={item} className="core-tag">
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
           <div className="skills">
             {skills.map((s) => (
               <div key={s.group} className="skill-group">
-                <h3>{s.group}</h3>
+                <div className="skill-head">
+                  <span className="skill-icon">
+                    <SkillIcon name={s.icon} />
+                  </span>
+                  <h3>{s.group}</h3>
+                  <span className="skill-count">{s.items.length}</span>
+                </div>
                 <div className="tags">
-                  {s.items.map((item) => (
-                    <span key={item} className="tag">
-                      {item}
-                    </span>
-                  ))}
+                  {s.items.map((item) =>
+                    coreSkills.includes(item) ? (
+                      <span key={item} className="tag tag-core">
+                        <StarIcon /> {item}
+                      </span>
+                    ) : (
+                      <span key={item} className="tag">
+                        {item}
+                      </span>
+                    ),
+                  )}
                 </div>
               </div>
             ))}
