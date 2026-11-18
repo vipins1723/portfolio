@@ -771,8 +771,7 @@
   row-gap: 2px;
   align-items: center;
   padding: 16px 18px;
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
+  border: 1.5px solid color-mix(in srgb, var(--accent) 45%, transparent);
   border-radius: 12px;
   background: var(--accent-soft);
 }
