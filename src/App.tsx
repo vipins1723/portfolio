@@ -104,6 +104,31 @@ const navLinks = [
 
 const sectionIds = navLinks.map(([id]) => id)
 
+// Adds `in-view` to experience cards once they scroll into view, to trigger their entrance animation.
+function useRevealJobs() {
+  useEffect(() => {
+    const jobs = document.querySelectorAll<HTMLElement>('.job')
+    if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      jobs.forEach((j) => j.classList.add('in-view'))
+      return
+    }
+    document.documentElement.classList.add('reveal-ready')
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view')
+            observer.unobserve(entry.target)
+          }
+        }
+      },
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.08 },
+    )
+    jobs.forEach((j) => observer.observe(j))
+    return () => observer.disconnect()
+  }, [])
+}
+
 // Tracks which section sits in the upper-middle of the screen, for the nav highlight.
 function useActiveSection(ids: string[]) {
   const [active, setActive] = useState(ids[0])
@@ -229,6 +254,7 @@ const mailLinks = {
 }
 
 function App() {
+  useRevealJobs()
   const toggleTheme = useTheme()
   const [copied, setCopied] = useState(false)
   const active = useActiveSection(sectionIds)
@@ -351,13 +377,15 @@ function App() {
                   </p>
                   <p className="job-blurb">{job.blurb}</p>
                   <ul className="job-points">
-                    {job.points.map((p) => (
-                      <li key={p}>{p}</li>
+                    {job.points.map((p, i) => (
+                      <li key={p} style={{ '--i': i } as React.CSSProperties}>
+                        {p}
+                      </li>
                     ))}
                   </ul>
                   <div className="tags job-tags">
-                    {job.tags.map((t) => (
-                      <span key={t} className="tag">
+                    {job.tags.map((t, i) => (
+                      <span key={t} className="tag" style={{ '--i': i } as React.CSSProperties}>
                         {t}
                       </span>
                     ))}
