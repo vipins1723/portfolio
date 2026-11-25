@@ -495,22 +495,11 @@
   transform: scaleY(1);
 }
 
-/* Scroll-in entrance (only once JS has confirmed it can reveal them) */
-@keyframes job-rise {
-  from {
-    opacity: 0;
-    transform: translateY(28px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
+/* Bullets slide in from the left as they scroll into view (only once JS is ready to reveal them) */
 @keyframes point-in {
   from {
     opacity: 0;
-    transform: translateX(-18px);
+    transform: translateX(-60px);
   }
   to {
     opacity: 1;
@@ -518,55 +507,16 @@
   }
 }
 
-@keyframes tag-pop {
-  from {
-    opacity: 0;
-    transform: scale(0.7);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes dot-pulse {
-  0% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
-  }
-  100% {
-    box-shadow: 0 0 0 14px transparent;
-  }
-}
-
-.reveal-ready .job:not(.in-view) .job-card,
-.reveal-ready .job:not(.in-view) .job-points li,
-.reveal-ready .job:not(.in-view) .job-tags .tag {
+.reveal-ready .job-points li:not(.in-view) {
   opacity: 0;
 }
 
-.job.in-view .job-card {
-  animation: job-rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-}
-
-.job.in-view .job-points li {
-  animation: point-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  animation-delay: calc(0.25s + var(--i, 0) * 0.12s);
-}
-
-.job.in-view .job-tags .tag {
-  animation: tag-pop 0.35s cubic-bezier(0.3, 1.4, 0.5, 1) both;
-  animation-delay: calc(0.55s + var(--i, 0) * 0.05s);
-}
-
-.job.in-view::before {
-  animation: dot-pulse 1.6s ease-out 0.2s 2;
+.job-points li.in-view {
+  animation: point-in 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .job-card,
-  .job-points li,
-  .job-tags .tag,
-  .job::before {
+  .job-points li {
     animation: none !important;
     opacity: 1 !important;
   }

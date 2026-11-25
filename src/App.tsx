@@ -104,27 +104,30 @@ const navLinks = [
 
 const sectionIds = navLinks.map(([id]) => id)
 
-// Adds `in-view` to experience cards once they scroll into view, to trigger their entrance animation.
-function useRevealJobs() {
+// Slides each experience bullet in from the left as it scrolls into view.
+function useRevealJobPoints() {
   useEffect(() => {
-    const jobs = document.querySelectorAll<HTMLElement>('.job')
+    const points = document.querySelectorAll<HTMLElement>('.job-points li')
     if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      jobs.forEach((j) => j.classList.add('in-view'))
+      points.forEach((li) => li.classList.add('in-view'))
       return
     }
     document.documentElement.classList.add('reveal-ready')
     const observer = new IntersectionObserver(
       (entries) => {
+        // Bullets that enter together are staggered so they still appear one after another.
+        let k = 0
         for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in-view')
-            observer.unobserve(entry.target)
-          }
+          if (!entry.isIntersecting) continue
+          const li = entry.target as HTMLElement
+          li.style.animationDelay = `${k++ * 0.12}s`
+          li.classList.add('in-view')
+          observer.unobserve(li)
         }
       },
-      { rootMargin: '0px 0px -12% 0px', threshold: 0.08 },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.15 },
     )
-    jobs.forEach((j) => observer.observe(j))
+    points.forEach((li) => observer.observe(li))
     return () => observer.disconnect()
   }, [])
 }
@@ -254,7 +257,7 @@ const mailLinks = {
 }
 
 function App() {
-  useRevealJobs()
+  useRevealJobPoints()
   const toggleTheme = useTheme()
   const [copied, setCopied] = useState(false)
   const active = useActiveSection(sectionIds)
@@ -377,15 +380,13 @@ function App() {
                   </p>
                   <p className="job-blurb">{job.blurb}</p>
                   <ul className="job-points">
-                    {job.points.map((p, i) => (
-                      <li key={p} style={{ '--i': i } as React.CSSProperties}>
-                        {p}
-                      </li>
+                    {job.points.map((p) => (
+                      <li key={p}>{p}</li>
                     ))}
                   </ul>
                   <div className="tags job-tags">
-                    {job.tags.map((t, i) => (
-                      <span key={t} className="tag" style={{ '--i': i } as React.CSSProperties}>
+                    {job.tags.map((t) => (
+                      <span key={t} className="tag">
                         {t}
                       </span>
                     ))}
